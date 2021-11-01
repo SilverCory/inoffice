@@ -14,10 +14,7 @@ type Env struct {
 }
 
 func GetEnv() Env {
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
-	}
+	_ = godotenv.Load()
 
 	cfg := Env{}
 	if err := env.Parse(&cfg); err != nil {
