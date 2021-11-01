@@ -3,9 +3,11 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 	"office"
 	"office/inoffice"
+	"os"
 	"time"
 )
 
@@ -34,8 +36,14 @@ func main() {
 	req.Header.Add("Authorization", "Bearer "+env.SlackBotToken)
 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
 
-	_, err = httpClient.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		panic(err)
 	}
+
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		panic("status code non 20x")
+	}
+
+	io.Copy(os.Stdout, resp.Body)
 }
