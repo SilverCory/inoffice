@@ -100,6 +100,4 @@ func ensureUpToDate(env office.Env) {
 	if err := goose.Run("up", db, "."); err != nil {
 		panic(err)
 	}
-
-	return
 }
