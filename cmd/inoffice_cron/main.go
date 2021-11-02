@@ -48,5 +48,5 @@ func main() {
 	}
 
 	_, _ = io.Copy(os.Stdout, resp.Body)
-	fmt.Println("Done!")
+	fmt.Println("\nDone!")
 }
