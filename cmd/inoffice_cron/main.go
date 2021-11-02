@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"office"
@@ -12,6 +13,7 @@ import (
 )
 
 func main() {
+	fmt.Println("Running cron to publish!")
 	var env = office.GetEnv()
 
 	httpClient := &http.Client{
@@ -46,4 +48,5 @@ func main() {
 	}
 
 	_, _ = io.Copy(os.Stdout, resp.Body)
+	fmt.Println("Done!")
 }
