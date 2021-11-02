@@ -45,5 +45,5 @@ func main() {
 		panic("status code non 20x")
 	}
 
-	io.Copy(os.Stdout, resp.Body)
+	_, _ = io.Copy(os.Stdout, resp.Body)
 }
