@@ -31,11 +31,14 @@ func BuildInOfficeMessage(weekStart time.Time, o map[Day][]InOffice) slack.Messa
 	}
 
 	// Truncate nil blocks, blergh
-	for i, v := range blocks {
+	for s, v := range blocks {
 		if val := reflect.ValueOf(v); !val.IsValid() || val.Interface() == nil || val.IsNil() {
-			copy(blocks[i:], blocks[i+1:])
-			blocks[len(blocks)-1] = nil
-			blocks = blocks[:len(blocks)-1]
+			blocks = append(blocks[:s], blocks[s+1:]...)
+		}
+	}
+	for s, v := range blocks {
+		if val := reflect.ValueOf(v); !val.IsValid() || val.Interface() == nil || val.IsNil() {
+			blocks = append(blocks[:s], blocks[s+1:]...)
 		}
 	}
 
