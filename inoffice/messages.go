@@ -23,24 +23,19 @@ func BuildInOfficeMessage(weekStart time.Time, o map[Day][]InOffice) slack.Messa
 			Type: slack.MarkdownType,
 			Text: "*When are you planning on coming in?*",
 		}, nil, nil),
-		generateWeekdayBlock(DayMonday, weekStart, o[DayMonday]),
-		generateWeekdayBlock(DayTuesday, weekStart, o[DayTuesday]),
-		generateWeekdayBlock(DayWednesday, weekStart, o[DayWednesday]),
-		generateWeekdayBlock(DayThursday, weekStart, o[DayThursday]),
-		generateWeekdayBlock(DayFriday, weekStart, o[DayFriday]),
 	}
 
-	// Truncate nil blocks, blergh
-	for s, v := range blocks {
-		if val := reflect.ValueOf(v); !val.IsValid() || val.Interface() == nil || val.IsNil() {
-			blocks = append(blocks[:s], blocks[s+1:]...)
+	appendToBlock := func(b slack.Block) {
+		if val := reflect.ValueOf(b); val.IsValid() && val.Interface() != nil && !val.IsNil() {
+			blocks = append(blocks, b)
 		}
 	}
-	for s, v := range blocks {
-		if val := reflect.ValueOf(v); !val.IsValid() || val.Interface() == nil || val.IsNil() {
-			blocks = append(blocks[:s], blocks[s+1:]...)
-		}
-	}
+
+	appendToBlock(generateWeekdayBlock(DayMonday, weekStart, o[DayMonday]))
+	appendToBlock(generateWeekdayBlock(DayTuesday, weekStart, o[DayTuesday]))
+	appendToBlock(generateWeekdayBlock(DayWednesday, weekStart, o[DayWednesday]))
+	appendToBlock(generateWeekdayBlock(DayThursday, weekStart, o[DayThursday]))
+	appendToBlock(generateWeekdayBlock(DayFriday, weekStart, o[DayFriday]))
 
 	return slack.NewBlockMessage(blocks...)
 }
