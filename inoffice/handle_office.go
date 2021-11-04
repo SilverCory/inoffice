@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"office"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -39,6 +40,7 @@ func StartServer(store Store, env office.Env) {
 }
 
 func (s *server) handlerInOffice(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("InOffice command handler")
 	verifier, err := slack.NewSecretsVerifier(r.Header, s.env.SlackSigningSecret)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -83,14 +85,18 @@ func (s *server) handlerInOffice(w http.ResponseWriter, r *http.Request) {
 	msg.ResponseType = slack.ResponseTypeInChannel
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(msg); err != nil {
+	jsonOutput := io.MultiWriter(w, os.Stdout)
+	if err := json.NewEncoder(jsonOutput).Encode(msg); err != nil {
 		fmt.Printf("Unable to encode json: %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	fmt.Println("\nInOffice command done")
 }
 
 func (s *server) handlerInteraction(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("InOffice interaction handler")
 	verifier, err := slack.NewSecretsVerifier(r.Header, s.env.SlackSigningSecret)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -198,13 +204,16 @@ func (s *server) handlerInteraction(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+	fmt.Println("InOffice command done")
 }
 
 func (s *server) httpResponse(msg slack.Message, responseURL string) error {
+	fmt.Println("InOffice httpResponse start")
 	var buf = new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(msg); err != nil {
 		return err
 	}
+	fmt.Printf("%s\n", buf.String())
 
 	req, err := http.NewRequest(http.MethodPost, responseURL, buf)
 	if err != nil {
