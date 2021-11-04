@@ -2,6 +2,7 @@ package inoffice
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 	"time"
 
@@ -31,7 +32,7 @@ func BuildInOfficeMessage(weekStart time.Time, o map[Day][]InOffice) slack.Messa
 
 	// Truncate nil blocks, blergh
 	for s, v := range blocks {
-		if v == nil {
+		if reflect.ValueOf(v).IsNil() {
 			blocks = append(blocks[:s], blocks[s+1:]...)
 		}
 	}
