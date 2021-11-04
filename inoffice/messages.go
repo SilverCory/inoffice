@@ -32,7 +32,7 @@ func BuildInOfficeMessage(weekStart time.Time, o map[Day][]InOffice) slack.Messa
 
 	// Truncate nil blocks, blergh
 	for s, v := range blocks {
-		if reflect.ValueOf(v).IsNil() {
+		if reflect.ValueOf(v).Interface() != nil {
 			blocks = append(blocks[:s], blocks[s+1:]...)
 		}
 	}
