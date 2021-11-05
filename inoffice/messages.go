@@ -25,17 +25,22 @@ func BuildInOfficeMessage(weekStart time.Time, o map[Day][]InOffice) slack.Messa
 		}, nil, nil),
 	}
 
-	appendToBlock := func(b slack.Block) {
+	appendToBlock := func(day Day, weekStart time.Time) {
+		if IsInPast(weekStart, day) {
+			return
+		}
+
+		b := generateWeekdayBlock(day, weekStart, o[day])
 		if val := reflect.ValueOf(b); val.IsValid() && val.Interface() != nil && !val.IsNil() {
 			blocks = append(blocks, b)
 		}
 	}
 
-	appendToBlock(generateWeekdayBlock(DayMonday, weekStart, o[DayMonday]))
-	appendToBlock(generateWeekdayBlock(DayTuesday, weekStart, o[DayTuesday]))
-	appendToBlock(generateWeekdayBlock(DayWednesday, weekStart, o[DayWednesday]))
-	appendToBlock(generateWeekdayBlock(DayThursday, weekStart, o[DayThursday]))
-	appendToBlock(generateWeekdayBlock(DayFriday, weekStart, o[DayFriday]))
+	appendToBlock(DayMonday, weekStart)
+	appendToBlock(DayTuesday, weekStart)
+	appendToBlock(DayWednesday, weekStart)
+	appendToBlock(DayThursday, weekStart)
+	appendToBlock(DayFriday, weekStart)
 
 	return slack.NewBlockMessage(blocks...)
 }
