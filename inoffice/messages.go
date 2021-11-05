@@ -46,10 +46,6 @@ func BuildInOfficeMessage(weekStart time.Time, o map[Day][]InOffice) slack.Messa
 }
 
 func generateWeekdayBlock(day Day, weekStart time.Time, inOffice []InOffice) slack.Block {
-	if IsInPast(weekStart, day) {
-		return nil
-	}
-
 	var usersTexts []*slack.TextBlockObject
 	if len(inOffice) > 0 {
 		usersText := &slack.TextBlockObject{
