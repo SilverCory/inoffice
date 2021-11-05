@@ -21,7 +21,7 @@ func main() {
 	}
 
 	var weekStart = inoffice.NextWeek(time.Now())
-	var msg = inoffice.BuildInOfficeMessage(weekStart, make(map[inoffice.Day][]inoffice.InOffice))
+	var msg = inoffice.BuildInOfficeMessage(weekStart, make(map[inoffice.Day][]inoffice.InOffice), true)
 
 	msg.Channel = env.SlackMainChannel
 

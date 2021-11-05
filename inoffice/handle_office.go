@@ -81,7 +81,7 @@ func (s *server) handlerInOffice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	msg := BuildInOfficeMessage(weekStart, allForWeek)
+	msg := BuildInOfficeMessage(weekStart, allForWeek, false)
 	msg.ResponseType = slack.ResponseTypeInChannel
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -194,7 +194,7 @@ func (s *server) handlerInteraction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	msg := BuildInOfficeMessage(inOffice.WeekStart, allForWeek)
+	msg := BuildInOfficeMessage(inOffice.WeekStart, allForWeek, false)
 	msg.ReplaceOriginal = true
 
 	if err := s.httpResponse(msg, payload.ResponseURL); err != nil {
