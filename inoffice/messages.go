@@ -19,14 +19,16 @@ func BuildErrorMessage(err error) slack.Message {
 
 func BuildInOfficeMessage(weekStart time.Time, o map[Day][]InOffice, nextWeek bool) slack.Message {
 	var nextWeekTxt = ""
+	var hint = ""
 	if nextWeek {
 		nextWeekTxt = " next week"
+		hint = "\nYou can do `/inoffice` at any time to see this prompt."
 	}
 
 	var blocks = []slack.Block{
 		slack.NewSectionBlock(&slack.TextBlockObject{
 			Type: slack.MarkdownType,
-			Text: fmt.Sprintf("*:wave: Oh hey there, when will we see you in the office%s?*", nextWeekTxt),
+			Text: fmt.Sprintf("*:wave: Oh hey there, when will we see you in the office%s?*%s", nextWeekTxt, hint),
 		}, nil, nil),
 	}
 
